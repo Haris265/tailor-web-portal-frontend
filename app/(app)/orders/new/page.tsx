@@ -202,7 +202,7 @@ function NewOrderForm() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-8">
+    <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8">
       <PageHeader
         title="New booking"
         description="Follow the bill book: customer, measurements, items, then print both slips."
@@ -215,7 +215,7 @@ function NewOrderForm() {
       ) : null}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <section className="panel space-y-5 p-6 shadow-sm">
+        <section className="panel space-y-5 p-4 shadow-sm sm:p-6">
           <h2 className="font-serif text-xl text-[#15202b]">1. Customer & dates</h2>
 
           <div className="flex flex-wrap gap-3">
@@ -323,14 +323,14 @@ function NewOrderForm() {
           </div>
         </section>
 
-        <section className="panel space-y-5 p-6 shadow-sm">
+        <section className="panel space-y-5 p-4 shadow-sm sm:p-6">
           <h2 className="font-serif text-xl text-[#15202b]">
             2. Measurement slip
           </h2>
           <MeasurementFormSections form={measForm} onChange={setMeasForm} />
         </section>
 
-        <section className="panel space-y-5 p-6 shadow-sm">
+        <section className="panel space-y-5 p-4 shadow-sm sm:p-6">
           <div className="flex flex-wrap items-end justify-between gap-2">
             <h2 className="font-serif text-xl text-[#15202b]">
               3. Customer slip items
@@ -344,8 +344,59 @@ function NewOrderForm() {
               No active catalog items. Add rates in Settings first.
             </p>
           ) : null}
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[560px] text-left text-sm">
+          <div className="space-y-3 md:hidden">
+            {items.map((row, index) => {
+              const amount =
+                (Number(row.qty) || 0) * (Number(row.rate) || 0);
+              return (
+                <div
+                  key={row.item_type}
+                  className="rounded-xl border border-slate-200 bg-white p-4"
+                >
+                  <p className="mb-3 font-medium text-[#15202b]">
+                    {row.item_name}
+                  </p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="mb-1 block text-xs font-medium text-slate-500">
+                        Qty
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={row.qty}
+                        onChange={(e) =>
+                          updateItem(index, { qty: e.target.value })
+                        }
+                        className="input-pro"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-xs font-medium text-slate-500">
+                        Rate
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={row.rate}
+                        onChange={(e) =>
+                          updateItem(index, { rate: e.target.value })
+                        }
+                        className="input-pro"
+                      />
+                    </div>
+                  </div>
+                  <p className="mt-3 text-right text-sm tabular-nums text-slate-600">
+                    Amount {formatRs(amount)}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+          <div className="hidden overflow-x-auto md:block">
+            <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500">
                   <th className="py-2 pr-3">Items</th>

@@ -169,13 +169,13 @@ export default function OrderSlipPage() {
   );
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-8 print:max-w-none print:px-0 print:py-0">
-      <div className="print:hidden mb-6 flex items-center justify-between">
+    <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8 print:max-w-none print:px-0 print:py-0">
+      <div className="print:hidden mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="font-serif text-2xl text-[#15202b]">Bill book slips</h1>
         <button
           type="button"
           onClick={() => window.print()}
-          className="btn-primary"
+          className="btn-primary w-full justify-center sm:w-auto"
         >
           <Printer className="h-4 w-4" />
           Print both slips

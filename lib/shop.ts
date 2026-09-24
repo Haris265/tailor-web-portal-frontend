@@ -1,5 +1,5 @@
 export const SHOP = {
-  name: "MA COLLECTION",
+  name: "KJ COLLECTIONS",
   phones: ["0301-2213810", "0319-2634559"],
   address:
     "Plot # 958, Shop # 05, Hussainabad, Federal B Area, Karachi, Near Karachi Haleem.",

@@ -31,7 +31,7 @@ function FieldGrid({
       <h3 className="border-b border-slate-200 pb-2 text-sm font-semibold uppercase tracking-wide text-[#15202b]">
         {title}
       </h3>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {fields.map((field) => {
           const kind = field.kind === "text" ? "text" : "number";
           return (
@@ -95,7 +95,7 @@ export default function MeasurementFormSections({
           {STYLE_OPTIONS.map((style) => (
             <label
               key={style.name}
-              className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-[#15202b]"
+              className="flex min-h-11 cursor-pointer items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-3 text-sm text-[#15202b]"
             >
               <input
                 type="checkbox"
@@ -104,7 +104,7 @@ export default function MeasurementFormSections({
                 onChange={(e) =>
                   onChange({ ...form, [style.name]: e.target.checked })
                 }
-                className="h-4 w-4 accent-[#a67c52]"
+                className="h-5 w-5 accent-[#a67c52]"
               />
               <span>
                 {style.label}

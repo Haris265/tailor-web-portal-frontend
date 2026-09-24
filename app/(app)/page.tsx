@@ -171,16 +171,16 @@ function DashboardContent() {
   ];
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-8">
+    <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
       <PageHeader
         title="Dashboard"
         description="Shop overview, customer lookup, and order pipeline."
         actions={
-          <div className="flex gap-2">
-            <Link href="/customers/new" className="btn-secondary">
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+            <Link href="/customers/new" className="btn-secondary w-full justify-center sm:w-auto">
               New customer
             </Link>
-            <Link href="/orders/new" className="btn-primary">
+            <Link href="/orders/new" className="btn-primary w-full justify-center sm:w-auto">
               New booking
             </Link>
           </div>
@@ -193,14 +193,14 @@ function DashboardContent() {
         </p>
       ) : null}
 
-      <div className="mb-5 flex flex-wrap items-end gap-3">
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
         <div className="flex flex-wrap gap-1.5">
           {chips.map((c) => (
             <button
               key={c.label}
               type="button"
               onClick={() => setStatusFilter(c.value)}
-              className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+              className={`rounded-full px-3.5 py-2.5 text-xs font-semibold transition ${
                 statusFilter === c.value
                   ? "bg-[#15202b] text-white"
                   : "bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-[#a67c52] hover:text-[#15202b]"
@@ -210,7 +210,7 @@ function DashboardContent() {
             </button>
           ))}
         </div>
-        <div className="ml-auto flex flex-wrap items-end gap-2">
+        <div className="flex flex-wrap items-end gap-2 sm:ml-auto">
           <div>
             <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-slate-500">
               From
@@ -422,7 +422,65 @@ function DashboardContent() {
               No orders match these filters.
             </p>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="divide-y divide-slate-100 md:hidden">
+              {orders.map((o) => (
+                <div key={o.id} className="space-y-3 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-medium text-[#15202b]">
+                        {o.sr_no ?? o.order_number}
+                      </p>
+                      {o.customer_detail ? (
+                        <Link
+                          href={`/customers/${o.customer_detail.id}`}
+                          className="mt-0.5 block text-sm hover:text-[#a67c52]"
+                        >
+                          {o.customer_detail.name}
+                          <span className="block text-xs text-slate-500">
+                            {o.customer_detail.serial_number}
+                          </span>
+                        </Link>
+                      ) : null}
+                    </div>
+                    <StatusBadge status={o.status} />
+                  </div>
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
+                    <span>Delivery {o.delivery_date}</span>
+                    <span>
+                      {formatRs(o.total_amount)} · Bal {formatRs(o.balance_due)}
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                    <Link
+                      href={`/orders/${o.id}/slip`}
+                      className="btn-secondary min-h-10 justify-center px-3 text-xs"
+                    >
+                      <Printer className="h-3 w-3" />
+                      Slip
+                    </Link>
+                    {o.status === "pending" ? (
+                      <button
+                        type="button"
+                        onClick={() => setOrderStatus(o.id, "ready")}
+                        className="btn-secondary min-h-10 justify-center px-3 text-xs"
+                      >
+                        Ready
+                      </button>
+                    ) : null}
+                    {o.status !== "delivered" ? (
+                      <button
+                        type="button"
+                        onClick={() => setOrderStatus(o.id, "delivered")}
+                        className="btn-secondary min-h-10 justify-center px-3 text-xs"
+                      >
+                        Delivered
+                      </button>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="hidden overflow-x-auto md:block">
               <table className="table-pro">
                 <thead>
                   <tr>

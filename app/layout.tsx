@@ -15,7 +15,7 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "MA COLLECTION — Tailor Portal",
+  title: "KJ COLLECTIONS — Tailor Portal",
   description: "Bill book bookings, measurements, and printable slips",
 };
 

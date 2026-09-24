@@ -17,18 +17,27 @@ const navItems = [
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
-export default function Sidebar() {
+type Props = {
+  open?: boolean;
+  onNavigate?: () => void;
+};
+
+export default function Sidebar({ open = false, onNavigate }: Props) {
   const pathname = usePathname();
 
   return (
-    <aside className="print:hidden flex w-64 shrink-0 flex-col border-r border-slate-200/80 bg-[#fafbfc] text-[#15202b]">
+    <aside
+      className={`print:hidden fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 flex-col border-r border-slate-200/80 bg-[#fafbfc] text-[#15202b] transition-transform duration-200 ease-out md:static md:translate-x-0 ${
+        open ? "translate-x-0" : "-translate-x-full"
+      }`}
+    >
       <div className="flex items-center gap-3 border-b border-slate-200/80 px-5 py-6">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[rgba(166,124,82,0.12)] text-[#a67c52] shadow-sm">
           <Scissors className="h-5 w-5" strokeWidth={1.75} />
         </div>
         <div>
           <p className="font-serif text-lg leading-tight tracking-tight text-[#15202b]">
-            MA COLLECTION
+            KJ COLLECTIONS
           </p>
           <p className="text-[11px] font-medium text-slate-500">Tailor Portal</p>
         </div>
@@ -45,7 +54,8 @@ export default function Sidebar() {
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-colors ${
+              onClick={onNavigate}
+              className={`flex min-h-11 items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-colors ${
                 active
                   ? "bg-[rgba(166,124,82,0.12)] text-[#15202b] shadow-sm"
                   : "text-slate-500 hover:bg-white hover:text-[#15202b]"

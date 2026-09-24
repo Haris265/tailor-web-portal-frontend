@@ -110,7 +110,58 @@ export default function CustomerOrderHistory({
           </p>
         ) : (
           <>
-            <div className="overflow-x-auto">
+            <div className="divide-y divide-slate-100 md:hidden">
+              {pageOrders.map((o) => (
+                <div key={o.id} className="space-y-3 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-medium text-[#15202b]">
+                        {o.sr_no ?? o.order_number}
+                      </p>
+                      <p className="mt-0.5 text-sm text-slate-500">
+                        {o.booking_date} → {o.delivery_date}
+                      </p>
+                    </div>
+                    <StatusBadge status={o.status} />
+                  </div>
+                  <p className="text-sm text-slate-600">
+                    {formatRs(o.total_amount)}
+                    <span className="text-slate-400">
+                      {" "}
+                      · Bal {formatRs(o.balance_due)}
+                    </span>
+                  </p>
+                  <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                    <Link
+                      href={`/orders/${o.id}/slip`}
+                      className="btn-secondary min-h-10 justify-center px-3 text-xs"
+                    >
+                      <Printer className="h-3 w-3" />
+                      Slip
+                    </Link>
+                    {o.status === "pending" ? (
+                      <button
+                        type="button"
+                        onClick={() => setOrderStatus(o.id, "ready")}
+                        className="btn-secondary min-h-10 justify-center px-3 text-xs"
+                      >
+                        Ready
+                      </button>
+                    ) : null}
+                    {o.status !== "delivered" ? (
+                      <button
+                        type="button"
+                        onClick={() => setOrderStatus(o.id, "delivered")}
+                        className="btn-secondary min-h-10 justify-center px-3 text-xs"
+                      >
+                        Delivered
+                      </button>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="hidden overflow-x-auto md:block">
               <table className="table-pro">
                 <thead>
                   <tr>

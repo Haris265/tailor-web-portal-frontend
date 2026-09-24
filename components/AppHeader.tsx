@@ -2,10 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut } from "lucide-react";
+import { LogOut, Menu, Scissors } from "lucide-react";
 import { getMe, logout } from "@/lib/api";
 
-export default function AppHeader() {
+type Props = {
+  onMenuClick?: () => void;
+};
+
+export default function AppHeader({ onMenuClick }: Props) {
   const router = useRouter();
   const [username, setUsername] = useState("tailor");
   const [open, setOpen] = useState(false);
@@ -48,7 +52,24 @@ export default function AppHeader() {
   const initial = (username.trim().charAt(0) || "T").toUpperCase();
 
   return (
-    <header className="print:hidden sticky top-0 z-40 flex h-14 shrink-0 items-center justify-end border-b border-slate-200/80 bg-white/80 px-6 backdrop-blur-md">
+    <header className="print:hidden sticky top-0 z-40 flex h-14 shrink-0 items-center justify-between border-b border-slate-200/80 bg-white/80 px-4 backdrop-blur-md sm:px-6">
+      <div className="flex min-w-0 items-center gap-2.5">
+        <button
+          type="button"
+          onClick={onMenuClick}
+          aria-label="Open menu"
+          className="flex h-10 w-10 items-center justify-center rounded-xl text-[#15202b] transition hover:bg-slate-100 md:hidden"
+        >
+          <Menu className="h-5 w-5" strokeWidth={1.75} />
+        </button>
+        <div className="flex min-w-0 items-center gap-2 md:hidden">
+          <Scissors className="h-4 w-4 shrink-0 text-[#a67c52]" strokeWidth={1.75} />
+          <span className="truncate font-serif text-base tracking-tight text-[#15202b]">
+            KJ COLLECTIONS
+          </span>
+        </div>
+      </div>
+
       <div ref={rootRef} className="relative">
         <button
           type="button"
@@ -56,7 +77,7 @@ export default function AppHeader() {
           aria-haspopup="menu"
           aria-expanded={open}
           title={username}
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-[#a67c52] text-sm font-semibold text-white shadow-sm ring-2 ring-[rgba(166,124,82,0.25)] transition hover:ring-[rgba(166,124,82,0.5)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a67c52]"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-[#a67c52] text-sm font-semibold text-white shadow-sm ring-2 ring-[rgba(166,124,82,0.25)] transition hover:ring-[rgba(166,124,82,0.5)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a67c52]"
         >
           {initial}
         </button>
@@ -79,7 +100,7 @@ export default function AppHeader() {
               role="menuitem"
               disabled={loggingOut}
               onClick={handleLogout}
-              className="flex w-full items-center gap-2 px-3 py-2.5 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-[#15202b] disabled:opacity-50"
+              className="flex min-h-11 w-full items-center gap-2 px-3 py-2.5 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-[#15202b] disabled:opacity-50"
             >
               <LogOut className="h-4 w-4" strokeWidth={1.75} />
               {loggingOut ? "Logging out…" : "Logout"}

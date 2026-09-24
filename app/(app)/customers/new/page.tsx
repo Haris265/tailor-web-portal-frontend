@@ -41,7 +41,7 @@ export default function NewCustomerPage() {
   }
 
   return (
-    <div className="mx-auto max-w-lg px-6 py-8">
+    <div className="mx-auto max-w-lg px-4 py-6 sm:px-6 sm:py-8">
       <div className="mb-4">
         <BackLink href="/customers" label="All customers" />
       </div>
@@ -50,7 +50,7 @@ export default function NewCustomerPage() {
         description="Register name and phone. Add measurements on the next step."
       />
 
-      <form onSubmit={handleSubmit} className="panel space-y-4 p-6 shadow-sm">
+      <form onSubmit={handleSubmit} className="panel space-y-4 p-4 shadow-sm sm:p-6">
         <div>
           <label className="mb-1.5 block text-sm font-medium text-slate-400">
             Name

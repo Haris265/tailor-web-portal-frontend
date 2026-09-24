@@ -147,7 +147,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-8">
+    <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
       <PageHeader
         title="Settings — Item rates"
         description="Set default rates for each suit/design. New bookings pick these up automatically."
@@ -175,102 +175,189 @@ export default function SettingsPage() {
             No catalog items yet. Add one below.
           </p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="table-pro">
-              <thead>
-                <tr>
-                  <th>Item</th>
-                  <th>Default rate</th>
-                  <th>Active</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((item) => {
-                  const draft = drafts[item.id] || {
-                    name: item.name,
-                    default_rate: String(item.default_rate),
-                    is_active: item.is_active,
-                  };
-                  return (
-                    <tr key={item.id} className={!item.is_active ? "opacity-60" : ""}>
-                      <td>
-                        <input
-                          value={draft.name}
-                          onChange={(e) =>
-                            updateDraft(item.id, { name: e.target.value })
-                          }
-                          className="input-pro"
-                        />
-                        <p className="mt-1 text-[11px] text-slate-400">
-                          {item.code}
-                        </p>
-                      </td>
-                      <td className="w-36">
-                        <input
-                          type="number"
-                          min="0"
-                          step="0.01"
-                          value={draft.default_rate}
-                          onChange={(e) =>
-                            updateDraft(item.id, {
-                              default_rate: e.target.value,
-                            })
-                          }
-                          className="input-pro"
-                        />
-                      </td>
-                      <td>
-                        <label className="inline-flex items-center gap-2 text-sm">
+          <>
+            <div className="divide-y divide-slate-100 md:hidden">
+              {items.map((item) => {
+                const draft = drafts[item.id] || {
+                  name: item.name,
+                  default_rate: String(item.default_rate),
+                  is_active: item.is_active,
+                };
+                return (
+                  <div
+                    key={item.id}
+                    className={`space-y-3 p-4 ${!item.is_active ? "opacity-60" : ""}`}
+                  >
+                    <div>
+                      <label className="mb-1 block text-xs font-medium text-slate-500">
+                        Item
+                      </label>
+                      <input
+                        value={draft.name}
+                        onChange={(e) =>
+                          updateDraft(item.id, { name: e.target.value })
+                        }
+                        className="input-pro"
+                      />
+                      <p className="mt-1 text-[11px] text-slate-400">
+                        {item.code}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-xs font-medium text-slate-500">
+                        Default rate
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={draft.default_rate}
+                        onChange={(e) =>
+                          updateDraft(item.id, {
+                            default_rate: e.target.value,
+                          })
+                        }
+                        className="input-pro"
+                      />
+                    </div>
+                    <label className="inline-flex min-h-10 items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={draft.is_active}
+                        onChange={(e) =>
+                          updateDraft(item.id, {
+                            is_active: e.target.checked,
+                          })
+                        }
+                        className="h-5 w-5 accent-[#a67c52]"
+                      />
+                      Active: {draft.is_active ? "Yes" : "No"}
+                    </label>
+                    <div className="flex flex-col gap-2 sm:flex-row">
+                      <button
+                        type="button"
+                        disabled={savingId === item.id}
+                        onClick={() => saveItem(item.id)}
+                        className="btn-primary min-h-10 justify-center px-3 text-xs"
+                      >
+                        {savingId === item.id ? (
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : null}
+                        Save
+                      </button>
+                      {item.is_active ? (
+                        <button
+                          type="button"
+                          disabled={savingId === item.id}
+                          onClick={() => deactivateItem(item.id)}
+                          className="btn-secondary min-h-10 justify-center px-3 text-xs text-red-600"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                          Hide
+                        </button>
+                      ) : null}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="hidden overflow-x-auto md:block">
+              <table className="table-pro">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Default rate</th>
+                    <th>Active</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {items.map((item) => {
+                    const draft = drafts[item.id] || {
+                      name: item.name,
+                      default_rate: String(item.default_rate),
+                      is_active: item.is_active,
+                    };
+                    return (
+                      <tr key={item.id} className={!item.is_active ? "opacity-60" : ""}>
+                        <td>
                           <input
-                            type="checkbox"
-                            checked={draft.is_active}
+                            value={draft.name}
+                            onChange={(e) =>
+                              updateDraft(item.id, { name: e.target.value })
+                            }
+                            className="input-pro"
+                          />
+                          <p className="mt-1 text-[11px] text-slate-400">
+                            {item.code}
+                          </p>
+                        </td>
+                        <td className="w-36">
+                          <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={draft.default_rate}
                             onChange={(e) =>
                               updateDraft(item.id, {
-                                is_active: e.target.checked,
+                                default_rate: e.target.value,
                               })
                             }
-                            className="h-4 w-4 accent-[#a67c52]"
+                            className="input-pro"
                           />
-                          {draft.is_active ? "Yes" : "No"}
-                        </label>
-                      </td>
-                      <td>
-                        <div className="flex flex-wrap gap-1">
-                          <button
-                            type="button"
-                            disabled={savingId === item.id}
-                            onClick={() => saveItem(item.id)}
-                            className="btn-primary px-2 py-1 text-xs"
-                          >
-                            {savingId === item.id ? (
-                              <Loader2 className="h-3 w-3 animate-spin" />
-                            ) : null}
-                            Save
-                          </button>
-                          {item.is_active ? (
+                        </td>
+                        <td>
+                          <label className="inline-flex items-center gap-2 text-sm">
+                            <input
+                              type="checkbox"
+                              checked={draft.is_active}
+                              onChange={(e) =>
+                                updateDraft(item.id, {
+                                  is_active: e.target.checked,
+                                })
+                              }
+                              className="h-4 w-4 accent-[#a67c52]"
+                            />
+                            {draft.is_active ? "Yes" : "No"}
+                          </label>
+                        </td>
+                        <td>
+                          <div className="flex flex-wrap gap-1">
                             <button
                               type="button"
                               disabled={savingId === item.id}
-                              onClick={() => deactivateItem(item.id)}
-                              className="btn-secondary px-2 py-1 text-xs text-red-600"
+                              onClick={() => saveItem(item.id)}
+                              className="btn-primary px-2 py-1 text-xs"
                             >
-                              <Trash2 className="h-3 w-3" />
-                              Hide
+                              {savingId === item.id ? (
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                              ) : null}
+                              Save
                             </button>
-                          ) : null}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                            {item.is_active ? (
+                              <button
+                                type="button"
+                                disabled={savingId === item.id}
+                                onClick={() => deactivateItem(item.id)}
+                                className="btn-secondary px-2 py-1 text-xs text-red-600"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                                Hide
+                              </button>
+                            ) : null}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </section>
 
-      <form onSubmit={addItem} className="panel space-y-4 p-6 shadow-sm">
+      <form onSubmit={addItem} className="panel space-y-4 p-4 shadow-sm sm:p-6">
         <h2 className="font-serif text-xl text-[#15202b]">Add new item</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
@@ -302,7 +389,7 @@ export default function SettingsPage() {
         <button
           type="submit"
           disabled={savingId === "new"}
-          className="btn-primary"
+          className="btn-primary w-full sm:w-auto"
         >
           {savingId === "new" ? (
             <Loader2 className="h-4 w-4 animate-spin" />

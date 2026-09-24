@@ -62,12 +62,12 @@ export default function CustomersPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-8">
+    <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8">
       <PageHeader
         title="Customers"
         description="Manage customer records. Search by name, serial, or phone."
         actions={
-          <Link href="/customers/new" className="btn-primary">
+          <Link href="/customers/new" className="btn-primary w-full sm:w-auto">
             <Plus className="h-4 w-4" />
             New customer
           </Link>
@@ -108,7 +108,60 @@ export default function CustomersPage() {
             </Link>
           </p>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="divide-y divide-slate-100 md:hidden">
+            {customers.map((c) => (
+              <div key={c.id} className="space-y-3 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-medium text-[#15202b]">{c.name}</p>
+                    <p className="mt-0.5 font-mono text-xs text-[#a67c52]">
+                      {c.serial_number}
+                    </p>
+                    <p className="mt-1 text-sm text-slate-400">{c.phone}</p>
+                  </div>
+                  {c.measurement ? (
+                    <span className="badge badge-delivered shrink-0">Saved</span>
+                  ) : (
+                    <span className="badge badge-pending shrink-0">Missing</span>
+                  )}
+                </div>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    title="View"
+                    onClick={() => router.push(`/customers/${c.id}`)}
+                    className="flex min-h-10 min-w-10 items-center justify-center rounded-md text-slate-400 hover:bg-slate-100 hover:text-[#15202b]"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    title="Edit"
+                    onClick={() =>
+                      router.push(`/customers/${c.id}?tab=details`)
+                    }
+                    className="flex min-h-10 min-w-10 items-center justify-center rounded-md text-slate-400 hover:bg-slate-100 hover:text-[#15202b]"
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    title="Delete"
+                    disabled={deletingId === c.id}
+                    onClick={() => handleDelete(c.id, c.name)}
+                    className="flex min-h-10 min-w-10 items-center justify-center rounded-md text-slate-400 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+                  >
+                    {deletingId === c.id ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="hidden overflow-x-auto md:block">
             <table className="table-pro">
               <thead>
                 <tr>
@@ -140,7 +193,7 @@ export default function CustomersPage() {
                           type="button"
                           title="View"
                           onClick={() => router.push(`/customers/${c.id}`)}
-                          className="rounded-md p-1.5 text-slate-400 hover:bg-slate-100 hover:text-[#15202b]"
+                          className="flex min-h-10 min-w-10 items-center justify-center rounded-md text-slate-400 hover:bg-slate-100 hover:text-[#15202b]"
                         >
                           <Eye className="h-4 w-4" />
                         </button>
@@ -150,7 +203,7 @@ export default function CustomersPage() {
                           onClick={() =>
                             router.push(`/customers/${c.id}?tab=details`)
                           }
-                          className="rounded-md p-1.5 text-slate-400 hover:bg-slate-100 hover:text-[#15202b]"
+                          className="flex min-h-10 min-w-10 items-center justify-center rounded-md text-slate-400 hover:bg-slate-100 hover:text-[#15202b]"
                         >
                           <Pencil className="h-4 w-4" />
                         </button>
@@ -159,7 +212,7 @@ export default function CustomersPage() {
                           title="Delete"
                           disabled={deletingId === c.id}
                           onClick={() => handleDelete(c.id, c.name)}
-                          className="rounded-md p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+                          className="flex min-h-10 min-w-10 items-center justify-center rounded-md text-slate-400 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
                         >
                           {deletingId === c.id ? (
                             <Loader2 className="h-4 w-4 animate-spin" />

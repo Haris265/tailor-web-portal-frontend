@@ -13,6 +13,7 @@ export default function AppLayout({
 }) {
   const router = useRouter();
   const [ready, setReady] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   useEffect(() => {
     if (!isLoggedIn()) {
@@ -21,6 +22,26 @@ export default function AppLayout({
     }
     setReady(true);
   }, [router]);
+
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setMobileNavOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [mobileNavOpen]);
+
+  useEffect(() => {
+    if (mobileNavOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileNavOpen]);
 
   if (!ready) {
     return (
@@ -32,9 +53,20 @@ export default function AppLayout({
 
   return (
     <div className="flex min-h-screen">
-      <Sidebar />
+      <Sidebar
+        open={mobileNavOpen}
+        onNavigate={() => setMobileNavOpen(false)}
+      />
+      {mobileNavOpen ? (
+        <button
+          type="button"
+          aria-label="Close menu"
+          className="print:hidden fixed inset-0 z-40 bg-black/40 md:hidden"
+          onClick={() => setMobileNavOpen(false)}
+        />
+      ) : null}
       <div className="flex min-h-screen min-w-0 flex-1 flex-col">
-        <AppHeader />
+        <AppHeader onMenuClick={() => setMobileNavOpen(true)} />
         <main className="min-h-0 flex-1 overflow-auto print:w-full">
           {children}
         </main>

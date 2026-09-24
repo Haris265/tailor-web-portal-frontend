@@ -229,7 +229,7 @@ function CustomerDetailContent() {
   ];
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-8">
+    <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-8">
       <div className="mb-4">
         <BackLink href="/customers" label="All customers" />
       </div>
@@ -239,20 +239,20 @@ function CustomerDetailContent() {
         actions={
           <Link
             href={`/orders/new?customer=${customer.id}`}
-            className="btn-primary"
+            className="btn-primary w-full sm:w-auto"
           >
             New booking
           </Link>
         }
       />
 
-      <div className="mb-5 flex gap-1 border-b border-[#e2e8f0]">
+      <div className="mb-5 flex gap-1 overflow-x-auto border-b border-[#e2e8f0]">
         {tabs.map((t) => (
           <button
             key={t.id}
             type="button"
             onClick={() => switchTab(t.id)}
-            className={`-mb-px border-b-2 px-4 py-2.5 text-sm font-medium transition ${
+            className={`-mb-px shrink-0 border-b-2 px-4 py-3 text-sm font-medium transition ${
               tab === t.id
                 ? "border-[#a67c52] text-[#15202b]"
                 : "border-transparent text-slate-500 hover:text-[#15202b]"
@@ -275,7 +275,7 @@ function CustomerDetailContent() {
       ) : null}
 
       {tab === "details" ? (
-        <form onSubmit={saveDetails} className="panel space-y-4 p-6 shadow-sm">
+        <form onSubmit={saveDetails} className="panel space-y-4 p-4 shadow-sm sm:p-6">
           <div>
             <label className="mb-1.5 block text-sm font-medium text-slate-600">
               Serial number
@@ -331,7 +331,7 @@ function CustomerDetailContent() {
       ) : null}
 
       {tab === "measurements" ? (
-        <form onSubmit={saveMeasurements} className="panel space-y-4 p-6 shadow-sm">
+        <form onSubmit={saveMeasurements} className="panel space-y-4 p-4 shadow-sm sm:p-6">
           <p className="text-sm text-slate-500">
             {customer.measurement
               ? "Last-known measurements used to prefill new bookings."
@@ -365,71 +365,124 @@ function CustomerDetailContent() {
                 No bookings yet for this customer.
               </p>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="table-pro">
-                  <thead>
-                    <tr>
-                      <th>Sr. No.</th>
-                      <th>Dates</th>
-                      <th>Amount</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {orders.map((o) => (
-                      <tr key={o.id}>
-                        <td className="font-medium">
-                          {o.sr_no ?? o.order_number}
-                        </td>
-                        <td className="text-slate-400">
-                          {o.booking_date} → {o.delivery_date}
-                        </td>
-                        <td>
-                          <div>{formatRs(o.total_amount)}</div>
-                          <div className="text-xs text-slate-400">
-                            Bal {formatRs(o.balance_due)}
-                          </div>
-                        </td>
-                        <td>
-                          <StatusBadge status={o.status} />
-                        </td>
-                        <td>
-                          <div className="flex flex-wrap gap-1">
-                            <Link
-                              href={`/orders/${o.id}/slip`}
-                              className="btn-secondary px-2 py-1 text-xs"
-                            >
-                              <Printer className="h-3 w-3" />
-                              Slip
-                            </Link>
-                            {o.status === "pending" ? (
-                              <button
-                                type="button"
-                                onClick={() => setOrderStatus(o.id, "ready")}
-                                className="btn-secondary px-2 py-1 text-xs"
-                              >
-                                Mark ready
-                              </button>
-                            ) : null}
-                            {o.status !== "delivered" ? (
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  setOrderStatus(o.id, "delivered")
-                                }
-                                className="btn-secondary px-2 py-1 text-xs"
-                              >
-                                Delivered
-                              </button>
-                            ) : null}
-                          </div>
-                        </td>
+              <>
+                <div className="divide-y divide-slate-100 md:hidden">
+                  {orders.map((o) => (
+                    <div key={o.id} className="space-y-3 p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="font-medium text-[#15202b]">
+                            {o.sr_no ?? o.order_number}
+                          </p>
+                          <p className="mt-0.5 text-sm text-slate-400">
+                            {o.booking_date} → {o.delivery_date}
+                          </p>
+                        </div>
+                        <StatusBadge status={o.status} />
+                      </div>
+                      <p className="text-sm text-slate-600">
+                        {formatRs(o.total_amount)}
+                        <span className="text-slate-400">
+                          {" "}
+                          · Bal {formatRs(o.balance_due)}
+                        </span>
+                      </p>
+                      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                        <Link
+                          href={`/orders/${o.id}/slip`}
+                          className="btn-secondary min-h-10 justify-center px-3 text-xs"
+                        >
+                          <Printer className="h-3 w-3" />
+                          Slip
+                        </Link>
+                        {o.status === "pending" ? (
+                          <button
+                            type="button"
+                            onClick={() => setOrderStatus(o.id, "ready")}
+                            className="btn-secondary min-h-10 justify-center px-3 text-xs"
+                          >
+                            Mark ready
+                          </button>
+                        ) : null}
+                        {o.status !== "delivered" ? (
+                          <button
+                            type="button"
+                            onClick={() => setOrderStatus(o.id, "delivered")}
+                            className="btn-secondary min-h-10 justify-center px-3 text-xs"
+                          >
+                            Delivered
+                          </button>
+                        ) : null}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="hidden overflow-x-auto md:block">
+                  <table className="table-pro">
+                    <thead>
+                      <tr>
+                        <th>Sr. No.</th>
+                        <th>Dates</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {orders.map((o) => (
+                        <tr key={o.id}>
+                          <td className="font-medium">
+                            {o.sr_no ?? o.order_number}
+                          </td>
+                          <td className="text-slate-400">
+                            {o.booking_date} → {o.delivery_date}
+                          </td>
+                          <td>
+                            <div>{formatRs(o.total_amount)}</div>
+                            <div className="text-xs text-slate-400">
+                              Bal {formatRs(o.balance_due)}
+                            </div>
+                          </td>
+                          <td>
+                            <StatusBadge status={o.status} />
+                          </td>
+                          <td>
+                            <div className="flex flex-wrap gap-1">
+                              <Link
+                                href={`/orders/${o.id}/slip`}
+                                className="btn-secondary px-2 py-1 text-xs"
+                              >
+                                <Printer className="h-3 w-3" />
+                                Slip
+                              </Link>
+                              {o.status === "pending" ? (
+                                <button
+                                  type="button"
+                                  onClick={() => setOrderStatus(o.id, "ready")}
+                                  className="btn-secondary px-2 py-1 text-xs"
+                                >
+                                  Mark ready
+                                </button>
+                              ) : null}
+                              {o.status !== "delivered" ? (
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setOrderStatus(o.id, "delivered")
+                                  }
+                                  className="btn-secondary px-2 py-1 text-xs"
+                                >
+                                  Delivered
+                                </button>
+                              ) : null}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </div>
         </div>
