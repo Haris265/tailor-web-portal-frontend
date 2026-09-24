@@ -108,6 +108,7 @@ export default function CustomersPage() {
             </Link>
           </p>
         ) : (
+          <>
           <div className="divide-y divide-slate-100 md:hidden">
             {customers.map((c) => (
               <div key={c.id} className="space-y-3 p-4">
@@ -227,6 +228,7 @@ export default function CustomersPage() {
               </tbody>
             </table>
           </div>
+          </>
         )}
       </div>
     </div>

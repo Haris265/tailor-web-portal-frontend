@@ -422,6 +422,7 @@ function DashboardContent() {
               No orders match these filters.
             </p>
           ) : (
+            <>
             <div className="divide-y divide-slate-100 md:hidden">
               {orders.map((o) => (
                 <div key={o.id} className="space-y-3 p-4">
@@ -557,6 +558,7 @@ function DashboardContent() {
                 </tbody>
               </table>
             </div>
+            </>
           )}
         </div>
       </section>
